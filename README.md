@@ -13,6 +13,7 @@ The Ansible playbook is structured into multiple roles, each handling a specific
 - **setup_git_repo:** Clones the necessary GitHub repository and sets up the project structure.
 - **setup_data_dir:** Sets up data directories and downloads necessary data files.
 - **setup_torchserve:** Installs TorchServe and its dependencies.
+
 Each role has its own directory under the `roles/` directory, with a `tasks/main.yml` file containing relevant tasks.
 
 ## Prerequisites
