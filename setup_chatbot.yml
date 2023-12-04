@@ -41,9 +41,6 @@
         creates: "{{ workspace_path }}/.git"
       environment:
         PATH: "{{ ansible_env.PATH }}"
-      # when: git_path.stat.exists or git_installed is changed
-      # environment:
-      #   PATH: "{{ ansible_env.PATH }}:/path/to/git"
 
     - name: Create required directories
       file:
@@ -62,16 +59,15 @@
           get_url:
             url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
             dest: /tmp/Miniconda3-latest-Linux-x86_64.sh
-            #mode: 0550
-            mode: 777
+            mode: 0550
 
         - name: Create conda folder
           become: True
           file:
             path: /opt/miniconda3
             state: directory
-            #mode: 755
-            mode: 777
+            mode: 755
+            #mode: 777
             recurse: yes
 
         - name: Run the Miniconda installer
@@ -93,14 +89,14 @@
           become: True
           file:
             path: /opt/miniconda3
-            mode: 777
+            mode: a+r
             recurse: yes
 
         - name: Conda - execution permission for all
           become: True
           file:
             path: /opt/miniconda3/bin
-            mode: 777
+            mode: a+x
             recurse: yes
 
     - name: Create Conda environment from intel_env.yml
@@ -138,17 +134,7 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      
-    # - name: Install additional Python packages in Conda environment
-    #   become: yes
-    #   pip:
-    #     name:
-    #       - torch-model-archiver
-    #       - captum
-    #     executable: "{{ conda_python_executable.stdout }}"
-    #   environment:
-    #     PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
-    #     WORKSPACE: "{{ workspace_path }}"
+
     - name: Install additional Python packages in Conda environment
       become: yes
       shell: /opt/miniconda3/envs/customer_chatbot_intel/bin/pip install torch-model-archiver captum
@@ -183,29 +169,6 @@
         WORKSPACE: "{{ workspace_path }}"
       ignore_errors: yes
 
-    # - name: Install TorchServe and related packages in Conda environment
-    #   become: yes
-    #   pip:
-    #     name:
-    #       - torchserve
-    #       - torch-model-archiver
-    #       - torch-workflow-archiver
-    #       - click-config-file
-    #     executable: "{{ conda_python_executable.stdout }}"
-    #   environment:
-    #     PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
-    #     WORKSPACE: "{{ workspace_path }}"
-    #   ignore_errors: yes
-
-    # - name: Install Apache Bench dependencies in Conda environment
-    #   become: yes
-    #   pip:
-    #     requirements: "{{ workspace_path }}/src/concurrency_benchmarking/serve/benchmarks/requirements-ab.txt"
-    #     executable: "{{ conda_python_executable.stdout }}"
-    #   environment:
-    #       PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
-    #       WORKSPACE: "{{ workspace_path }}"
-    #   ignore_errors: yes
     - name: Install TorchServe and related packages in Conda environment
       become: yes
       pip:
