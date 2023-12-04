@@ -1,0 +1,28 @@
+- name: Download Miniconda
+  get_url:
+    url: "{{ conda_installer_url }}"
+    dest: /tmp/Miniconda3-latest-Linux-x86_64.sh
+    mode: 0550
+
+- name: Create conda folder
+  file:
+    path: /opt/miniconda3
+    state: directory
+    mode: 755
+
+- name: Run the Miniconda installer
+  shell: /tmp/Miniconda3-latest-Linux-x86_64.sh -b -u -p /opt/miniconda3
+
+- name: Remove the Miniconda installer
+  file:
+    state: absent
+    path: /tmp/Miniconda3-latest-Linux-x86_64.sh
+
+- name: Add Miniconda bin to path
+  lineinfile:
+    path: /etc/profile
+    line: 'export PATH=/opt/miniconda3/bin:$PATH'
+    create: yes
+
+- name: Initialize Conda for all users
+  shell: /opt/miniconda3/bin/conda init

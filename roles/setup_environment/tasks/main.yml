@@ -1,0 +1,11 @@
+- name: Set environment variables
+  set_fact:
+    WORKSPACE: "{{ workspace_path }}"
+    DATA_DIR: "{{ data_dir }}"
+    OUTPUT_DIR: "{{ output_dir }}"
+    CONFIG_DIR: "{{ config_dir }}"
+
+- name: Create workspace directory
+  file:
+    path: "{{ workspace_path }}"
+    state: directory

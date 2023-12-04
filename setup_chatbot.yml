@@ -155,7 +155,9 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-
+      #note to self, remove this later
+      ignore_errors: yes
+      
     - name: Install TorchServe dependencies
       become: yes
       shell: |

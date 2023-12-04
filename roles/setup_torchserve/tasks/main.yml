@@ -1,0 +1,27 @@
+- name: Clone TorchServe repository
+  git:
+    repo: 'https://github.com/pytorch/serve.git'
+    dest: "{{ workspace_path }}/src/concurrency_benchmarking/serve"
+    version: 'v0.8.2'
+
+- name: Install TorchServe dependencies
+  shell: |
+    source /opt/miniconda3/bin/activate customer_chatbot_intel
+    python ./ts_scripts/install_dependencies.py
+  args:
+    chdir: "{{ workspace_path }}/src/concurrency_benchmarking/serve"
+    executable: /bin/bash
+
+- name: Install TorchServe and related packages in Conda environment
+  pip:
+    name:
+      - torchserve
+      - torch-model-archiver
+      - torch-workflow-archiver
+      - click-config-file
+    executable: "/opt/miniconda3/envs/customer_chatbot_intel/bin/pip"
+
+- name: Install Apache Bench dependencies in Conda environment
+  pip:
+    requirements: "{{ workspace_path }}/src/concurrency_benchmarking/serve/benchmarks/requirements-ab.txt"
+    executable: "/opt/miniconda3/envs/customer_chatbot_intel/bin/pip"

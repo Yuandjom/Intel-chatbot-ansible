@@ -1,0 +1,19 @@
+- name: Create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ output_dir }}/saved_models/"
+    - "{{ data_dir }}/atis-2/"
+    - "{{ output_dir }}/logs"
+
+- name: Download ATIS-2 data files
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ data_dir }}/atis-2/{{ item.dest }}"
+  loop:
+    - { url: 'https://raw.githubusercontent.com/sz128/slot_filling_and_intent_detection_of_SLU/master/data/atis-2/train', dest: 'train' }
+    - { url: 'https://raw.githubusercontent.com/sz128/slot_filling_and_intent_detection_of_SLU/master/data/atis-2/test', dest: 'test' }
+    - { url: 'https://raw.githubusercontent.com/sz128/slot_filling_and_intent_detection_of_SLU/master/data/atis-2/valid', dest: 'valid' }
+    - { url: 'https://raw.githubusercontent.com/sz128/slot_filling_and_intent_detection_of_SLU/master/data/atis-2/vocab.intent', dest: 'vocab.intent' }
+    - { url: 'https://raw.githubusercontent.com/sz128/slot_filling_and_intent_detection_of_SLU/master/data/atis-2/vocab.slot', dest: 'vocab.slot' }

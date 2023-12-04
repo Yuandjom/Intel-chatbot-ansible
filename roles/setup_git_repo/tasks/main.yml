@@ -1,0 +1,11 @@
+- name: Install git
+  apt:
+    name: git
+    state: present
+
+- name: Clone Git repository
+  git:
+    repo: "{{ git_repo_url }}"
+    dest: "{{ workspace_path }}"
+    clone: yes
+    update: yes
