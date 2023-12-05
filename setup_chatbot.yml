@@ -18,6 +18,34 @@
         DATA_DIR: "{{ data_dir }}"
         OUTPUT_DIR: "{{ output_dir }}"
         CONFIG_DIR: "{{ config_dir }}"
+    
+    # - name: Generate an SSH key
+    #   command: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+    #   args:
+    #     creates: ~/.ssh/id_rsa
+    #   delegate_to: localhost
+    #   run_once: true
+
+    # - name: Read public key
+    #   command: cat ~/.ssh/id_rsa.pub
+    #   register: ssh_public_key
+    #   delegate_to: localhost
+    #   run_once: true
+
+    # - name: Copy public key to remote host
+    #   authorized_key:
+    #     user: "{{ ansible_user }}"
+    #     state: present
+    #     key: "{{ ssh_public_key.stdout }}"
+
+
+    - name: Execute a shell command using the environment variables
+      shell: echo "Workspace directory is $WORKSPACE"
+      environment:
+        WORKSPACE: "{{ WORKSPACE }}"
+        DATA_DIR: "{{ DATA_DIR }}"
+        OUTPUT_DIR: "{{ OUTPUT_DIR }}"
+        CONFIG_DIR: "{{ CONFIG_DIR }}"
 
     - name: Install git
       apt:
@@ -67,7 +95,6 @@
             path: /opt/miniconda3
             state: directory
             mode: 755
-            #mode: 777
             recurse: yes
 
         - name: Run the Miniconda installer
@@ -205,7 +232,6 @@
       become: yes
       get_url:
         url: "{{ item.url }}"
-        #dest: "{{ DATA_DIR }}/atis-2/{{ item.dest }}"\
         dest:  "{{ DATA_DIR }}/atis-2/{{ item.dest }}"
       loop:
         - { url: 'https://raw.githubusercontent.com/sz128/slot_filling_and_intent_detection_of_SLU/master/data/atis-2/train', dest: 'train' }
@@ -219,3 +245,18 @@
       shell: cat train valid > train_all
       args:
         chdir: "{{ DATA_DIR }}/atis-2"
+
+    # - name: Install Conda packages with root privileges
+    #   become: yes
+    #   shell: conda install -c intel nb_conda_kernels jupyter notebook -y
+    #   environment:
+    #     PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
+    #     WORKSPACE: "{{ workspace_path }}"
+    #   args:
+    #     executable: /bin/bash
+    #   register: conda_install_output
+
+    # - name: Print output of Conda install command
+    #   debug:
+    #     var: conda_install_output
+
