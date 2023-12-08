@@ -49,7 +49,7 @@ ansible-playbook -i hosts.ini setup_customer_chatbot.yml -vv
 ansible-playbook -i inventory/setup_customer_chatbot/hosts.ini setup_customer_chatbot.yml -vv
 ```
 This command will run the playbook and execute each role sequentially.
-
+![Alt text](image.png)
 ## Customization
 You can customize the playbook according to your requirements by editing the tasks in the respective roles. Ensure that you understand each role's functionality before making changes.
 
