@@ -7,17 +7,29 @@ leveraging the AI Starter Kit for Customer Chatbot using Intel® Extension for P
 The Ansible playbook is structured into multiple roles, each handling a specific part of the setup process:
 
 - **setup_environment:** Configures environment variables and workspace directory.
-- **install_dependencies:** Installs necessary packages like Git and Apache2 Utils.
-- **setup_conda:** Handles the installation and setup of the Miniconda environment.
-- **setup_python:** Sets up Python in the Conda environment and installs required Python packages.
 - **setup_git_repo:** Clones the necessary GitHub repository and sets up the project structure.
-- **setup_data_dir:** Sets up data directories and downloads necessary data files.
+- **setup_dir:** Setup the working directories needed 
+- **setup_conda:** Handles the installation and setup of the Miniconda environment.
+- **creating_conda_env:** Setup of the intel conda virutal environment.
+- **install_dependencies:** Installs necessary packages like Git and Apache2 Utils and Python packages.
+- **setup_python:** Sets up Python in the Conda environment and installs required Python packages.
 - **setup_torchserve:** Installs TorchServe and its dependencies.
+- **setup_datasets:** Sets up data directories and downloads necessary data files.
 
-Each role has its own directory under the `roles/` directory, with a `tasks/main.yml` file containing relevant tasks.
+>Each role has its own directory under the `roles/` directory, with a `tasks/main.yml` file containing relevant tasks.
 
 ## Prerequisites
-Ansible 2.9 or later.
+```
+ansible [core 2.16.0]
+  config file = None
+  configured module search path = ['/home/test/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /home/test/.local/pipx/venvs/ansible/lib/python3.10/site-packages/ansible
+  ansible collection location = /home/test/.ansible/collections:/usr/share/ansible/collections
+  executable location = /home/test/.local/bin/ansible
+  python version = 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] (/home/test/.local/pipx/venvs/ansible/bin/python)
+  jinja version = 3.1.2
+  libyaml = True
+```
 Access to an Ubuntu-based system where you have administrative privileges.
 
 ## Usage
@@ -29,9 +41,12 @@ cd ansible-customer-chatbot
 ```
 2. **Configure Variables:** Edit the vars/main.yml file to set up your workspace path and other variables.
 
+2. **Configure hosts:** Edit the inventory/setup_customer_chatbot/main.yml file to set up your workspace path and other variables.
+
 3. **Run the Playbook:** Execute the Ansible playbook.
 ```
 ansible-playbook -i hosts.ini setup_customer_chatbot.yml -vv
+ansible-playbook -i inventory/setup_customer_chatbot/hosts.ini setup_customer_chatbot.yml -vv
 ```
 This command will run the playbook and execute each role sequentially.
 

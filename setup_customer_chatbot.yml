@@ -5,10 +5,13 @@
     - vars/main.yml
   roles:
     - setup_environment
-    - install_dependencies
-    - setup_conda
-    - setup_python
     - setup_git_repo
+    - setup_dir
+    - setup_conda
+    - creating_conda_env
+    - install_dependencies
+    - install_apache_bench
     - setup_torchserve
-    - setup_data_dir
+    - setup_datasets
+
 

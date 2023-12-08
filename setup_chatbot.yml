@@ -19,26 +19,7 @@
         OUTPUT_DIR: "{{ output_dir }}"
         CONFIG_DIR: "{{ config_dir }}"
     
-    # - name: Generate an SSH key
-    #   command: ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
-    #   args:
-    #     creates: ~/.ssh/id_rsa
-    #   delegate_to: localhost
-    #   run_once: true
-
-    # - name: Read public key
-    #   command: cat ~/.ssh/id_rsa.pub
-    #   register: ssh_public_key
-    #   delegate_to: localhost
-    #   run_once: true
-
-    # - name: Copy public key to remote host
-    #   authorized_key:
-    #     user: "{{ ansible_user }}"
-    #     state: present
-    #     key: "{{ ssh_public_key.stdout }}"
-
-
+    #need to change here later
     - name: Execute a shell command using the environment variables
       shell: echo "Workspace directory is $WORKSPACE"
       environment:
@@ -168,8 +149,6 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      #note to self, remove this later
-      ignore_errors: yes
 
     - name: Clone TorchServe repository
       become: yes

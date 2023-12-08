@@ -5,7 +5,11 @@
     OUTPUT_DIR: "{{ output_dir }}"
     CONFIG_DIR: "{{ config_dir }}"
 
-- name: Create workspace directory
-  file:
-    path: "{{ workspace_path }}"
-    state: directory
+#need to change here later
+- name: Execute a shell command using the environment variables
+  shell: echo "Workspace directory is $WORKSPACE"
+  environment:
+    WORKSPACE: "{{ WORKSPACE }}"
+    DATA_DIR: "{{ DATA_DIR }}"
+    OUTPUT_DIR: "{{ OUTPUT_DIR }}"
+    CONFIG_DIR: "{{ CONFIG_DIR }}"

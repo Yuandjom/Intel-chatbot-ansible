@@ -1,28 +1,44 @@
-- name: Download Miniconda
-  get_url:
-    url: "{{ conda_installer_url }}"
-    dest: /tmp/Miniconda3-latest-Linux-x86_64.sh
-    mode: 0550
+- name: Install Conda
+  block:
+    - name: Download Miniconda
+      get_url:
+        url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+        dest: /tmp/Miniconda3-latest-Linux-x86_64.sh
+        mode: 0550
 
-- name: Create conda folder
-  file:
-    path: /opt/miniconda3
-    state: directory
-    mode: 755
+    - name: Create conda folder
+      become: True
+      file:
+        path: /opt/miniconda3
+        state: directory
+        mode: 755
+        recurse: yes
 
-- name: Run the Miniconda installer
-  shell: /tmp/Miniconda3-latest-Linux-x86_64.sh -b -u -p /opt/miniconda3
+    - name: Run the Miniconda installer
+      shell: /tmp/Miniconda3-latest-Linux-x86_64.sh -b -u -p /opt/miniconda3
 
-- name: Remove the Miniconda installer
-  file:
-    state: absent
-    path: /tmp/Miniconda3-latest-Linux-x86_64.sh
+    - name: Remove the Miniconda installer
+      file:
+        state: absent
+        path: /tmp/Miniconda3-latest-Linux-x86_64.sh
 
-- name: Add Miniconda bin to path
-  lineinfile:
-    path: /etc/profile
-    line: 'export PATH=/opt/miniconda3/bin:$PATH'
-    create: yes
+    - name: Add Miniconda bin to path
+      become: True
+      lineinfile:
+        path: /etc/profile
+        line: 'export PATH=/opt/miniconda3/bin:$PATH'
+        create: yes
 
-- name: Initialize Conda for all users
-  shell: /opt/miniconda3/bin/conda init
+    - name: Conda - read permission for all
+      become: True
+      file:
+        path: /opt/miniconda3
+        mode: a+r #need change the permission
+        recurse: yes
+
+    - name: Conda - execution permission for all
+      become: True
+      file:
+        path: /opt/miniconda3/bin
+        mode: a+x
+        recurse: yes
