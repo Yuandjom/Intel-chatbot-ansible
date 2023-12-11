@@ -86,13 +86,17 @@
             state: absent
             path: /tmp/Miniconda3-latest-Linux-x86_64.sh
 
-        - name: Add Miniconda bin to path
-          become: True
-          lineinfile:
-            path: /etc/profile
-            line: 'export PATH=/opt/miniconda3/bin:$PATH'
-            create: yes
-
+        # - name: Add Miniconda bin to path
+        #   become: True
+        #   lineinfile:
+        #     path: /etc/profile
+        #     line: 'export PATH=/opt/miniconda3/bin:$PATH && conda init'
+        #     create: yes
+        - name: Add path and initialize conda
+          shell: "export PATH=/opt/miniconda3/bin:$PATH; conda init"
+          args:
+            executable: /bin/bash
+            
         - name: Conda - read permission for all
           become: True
           file:
@@ -113,11 +117,6 @@
       environment:
         PATH: "/opt/miniconda3/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      ignore_errors: yes
-
-    - name: Initialize Conda for all users
-      become: yes
-      shell: /opt/miniconda3/bin/conda init
       ignore_errors: yes
 
     - name: Install Apache2 Utils and Git
@@ -224,18 +223,23 @@
       shell: cat train valid > train_all
       args:
         chdir: "{{ DATA_DIR }}/atis-2"
+    
+    - name: Get CPU architecture information
+      shell: lscpu | grep 'am'
+      register: cpu_info
 
-    # - name: Install Conda packages with root privileges
-    #   become: yes
-    #   shell: conda install -c intel nb_conda_kernels jupyter notebook -y
-    #   environment:
-    #     PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
-    #     WORKSPACE: "{{ workspace_path }}"
-    #   args:
-    #     executable: /bin/bash
-    #   register: conda_install_output
+    - name: Print CPU architecture information
+      debug:
+        msg: "{{ cpu_info.stdout }}"
 
-    # - name: Print output of Conda install command
-    #   debug:
-    #     var: conda_install_output
-
+    - name: Check PyTorch and Intel Extension for PyTorch versions
+      become: yes
+      shell: |
+        /opt/miniconda3/bin/conda run -n customer_chatbot_intel python -c "import torch; import intel_extension_for_pytorch as ipex; print('PyTorch Version:', torch.__version__); print('Intel Extension for PyTorch Version:', ipex.__version__);"
+      environment:
+        PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
+      register: python_version 
+    
+    - name: Print Pytorch version and Intel Extension for PyTorch versions
+      debug:
+        msg: "{{ python_version.stdout }}"
