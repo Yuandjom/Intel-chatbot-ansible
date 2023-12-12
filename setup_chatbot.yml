@@ -19,7 +19,7 @@
         OUTPUT_DIR: "{{ output_dir }}"
         CONFIG_DIR: "{{ config_dir }}"
     
-    #need to change here later
+    #Note to self: write the export shell function here if possible
     - name: Execute a shell command using the environment variables
       shell: echo "Workspace directory is $WORKSPACE"
       environment:
@@ -111,12 +111,14 @@
             mode: a+x
             recurse: yes
 
+      #Task will take approximately 15 mins to complete setting up the environment
     - name: Create Conda environment from intel_env.yml
       become: yes
       shell: conda env create -f {{ conda_env_file }}
       environment:
         PATH: "/opt/miniconda3/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
+      #Once the conda environment is created on the local machine, creating it again will have an error
       ignore_errors: yes
 
     - name: Install Apache2 Utils and Git
@@ -160,7 +162,7 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      #note to self, remove this later
+      #If you have a local copy of the repo, an error will occur if you clone it again
       ignore_errors: yes
       
     - name: Install TorchServe dependencies
@@ -174,7 +176,6 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      ignore_errors: yes
 
     - name: Install TorchServe and related packages in Conda environment
       become: yes
@@ -188,7 +189,6 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      ignore_errors: yes
 
     - name: Install Apache Bench dependencies in Conda environment
       become: yes
@@ -198,7 +198,6 @@
       environment:
         PATH: "/opt/miniconda3/envs/customer_chatbot_intel/bin:{{ ansible_env.PATH }}"
         WORKSPACE: "{{ workspace_path }}"
-      ignore_errors: yes
       
     - name: Create atis-2 directory in DATA_DIR
       become: yes
