@@ -45,7 +45,7 @@ cd ansible-customer-chatbot
 
 3. **Run the Playbook:** Execute the Ansible playbook.
 ```
-ansible-playbook -i hosts.ini setup_chat.yml -vv
+ansible-playbook -i hosts.ini setup_chatbot.yml -vv
 ansible-playbook -i inventory/setup_customer_chatbot/hosts.ini setup_customer_chatbot.yml -vv
 ```
 This command will run the playbook and execute each role sequentially.
